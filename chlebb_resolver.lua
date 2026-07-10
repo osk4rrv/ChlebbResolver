@@ -6,7 +6,7 @@ writted by chlebb and osk4rrv.
 
 local ffi = require("ffi")
 local bit = require("bit")
-local vector = require("vector")
+local vector = require("vector")\
 
 local enable = ui.new_checkbox("RAGE", "Other", "Enable Chlebb Resolver")
 local type = ui.new_combobox("RAGE", "Other", "Resolver Type", {"Animstate", "Lby"})
@@ -32,7 +32,6 @@ ui.set_callback(extrapolation_ticks, update_ui_visibility)
 
 local animstate_offset   = 0x9960
 local animlayer_offset   = 0x2980
-local poseparam_offset   = 0x2764
 local max_layers         = 15
 
 ffi.cdef[[
@@ -283,30 +282,39 @@ client.set_callback("shut_down", function()
     client.set_clan_tag("")
 end)
 
-client.set_callback("aim_miss", function(e)
+client.set_callback("aim_miss", function()
     local hitgroup_names = {'generic', 'head', 'chest', 'stomach', 'left arm', 'right arm', 'left leg', 'right leg', 'neck', '?', "gear"}
-    local hit_chance = e.hit_chance or 0
-    local reason = e.reason or "unknown"
-    local enemy = e.target or "unknown"
-    local e_ticks = ui.get(extrapolation) and ui.get(extrapolation_ticks) or 0
+    local hit_chance = e.hit_chance
+    local reason = e.reason
+    local enemy = e.target
+    local e_ticks = rage_extrapolation_ticks
 
+    if not enemy then 
+        enemy = unknown
+    end
+    if not reason then 
+        reason = unknown
+    end
     if reason == "unknown" or reason == "?" then
         reason = "resolver (?)"
     end
     client.color_log("Chlebb Resolver > Missed shot at " .. enemy .. " due to " .. reason .. " [hit chance:" .. hit_chance .. "%, Extrapolation: " ..  e_ticks .. "]", {255, 0, 0})
 end)
 
-client.set_callback("aim_hit", function(e)
+client.set_callback("aim_hit", function()
     local hitgroup_names = {'generic', 'head', 'chest', 'stomach', 'left arm', 'right arm', 'left leg', 'right leg', 'neck', '?', "gear"}
-    local hit_chance = e.hit_chance or 0
-    local enemy = e.target or "unknown"
-    local damage = e.damage or 0
+    local hit_chance = e.hit_chance
+    local enemy = e.target
+    local damage = e.damage
     local hitgroup = e.hitgroup
     if not hitgroup then 
-        hitgroup = 0
+        hitgroup = "unknown"
     end
-    local e_ticks = ui.get(extrapolation) and ui.get(extrapolation_ticks) or 0
+    local e_ticks = rage_extrapolation_ticks
 
+    if not enemy then 
+        enemy = unknown
+    end
     client.color_log("Chlebb Resolver > Shot at " .. enemy .. " for " .. damage .. " damage in " .. hitgroup_names[hitgroup + 1] .. " [hit chance:" .. hit_chance .. "%, Extrapolation: " ..  e_ticks .. "]", {255, 0, 0})
 end)
 
