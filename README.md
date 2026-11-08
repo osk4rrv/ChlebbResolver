@@ -1,6 +1,4 @@
 # Chlebb Resolver - Writted by Chlebb with osk4rrv and AI help.
-## ChlebbResolver is HvH CS:GO Resolver (HvH - hack vs hack is underground csgo community)
-### For Gamesense.pub (mostly cracks.)
 
 Chlebb Resolver is CS:GO HvH Lua Resolver to upgrade your playing expirence with GSC (Gamesense Crack)
 
